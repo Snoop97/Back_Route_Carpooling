@@ -1,187 +1,108 @@
--- phpMyAdmin SQL Dump
--- version 4.9.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 07-11-2019 a las 06:25:48
--- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.3.10
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
+DROP DATABASE `bd_route-carpool`;
 
+CREATE DATABASE `bd_route-carpool`;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+USE `bd_route-carpool`;
 
---
--- Base de datos: `bd_route-carpool`
---
+CREATE TABLE `user_type` (
+    `id` INT(1) NOT NULL,
+    `description` VARCHAR(15) NOT NULL,
+    PRIMARY KEY (id)
+);
 
--- --------------------------------------------------------
+INSERT INTO user_type VALUES ('1', 'Dueño');
+INSERT INTO user_type VALUES ('2', 'Usuario');
+INSERT INTO user_type VALUES ('3', 'Administrador');
 
---
--- Estructura de tabla para la tabla `administrador`
---
+CREATE TABLE `user` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `type` INT(1) NOT NULL,
+  `name` TEXT NOT NULL,
+  `first_lastname` TEXT NOT NULL,
+  `second_lastname` TEXT NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `phone` VARCHAR(9) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (type) REFERENCES user_type(id)
+);
 
-CREATE TABLE `administrador` (
-  `adm_id` int(11) NOT NULL,
-  `email_adm` varchar(100) NOT NULL,
-  `psw_adm` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `user` (`type`,
+  `name`,
+  `first_lastname`,
+  `second_lastname`,
+  `email`,
+  `phone`,
+  `password`) VALUES
+(2,'Carlos', 'Romero', 'Tapia', 'ctapia@gmail.com','981562743', 'abc123'),
+(2,'Erica', 'Tapia', 'Nuñez', 'etapia@gmail.com', '981562743','1234'),
+(2,'Luis', 'Lopez', 'Zeballos', 'llopez@gmail.com', '981562743','abc1234'),
+(1,'Fabian', 'Lopez', 'Sarango', 'flopez@gmail.com','981562743',  '12345'),
+(1,'Sandra', 'Lopez', 'Sarango', 'slopez@gmail.com', '987654321',  '123456'),
+(1,'Miguel', 'Rodas', 'Balbin', 'mrodas@gmail.com', '965434897',  '1234567'),
+(1,'Luis', 'Ramirez', 'Sotelo', 'adfdsf@gmil.com', '987654321',  '123456'),
+(1,'Fabian', 'SADSA', 'DSA', 'asd', '987654321', '123');
 
---
--- Volcado de datos para la tabla `administrador`
---
+select * from user;
 
-INSERT INTO `administrador` (`adm_id`, `email_adm`, `psw_adm`) VALUES
-(1, 'admin', 'sysadmin123');
+CREATE TABLE `vehicle_type` (
+    `id` INT(1) NOT NULL,
+    `description` VARCHAR(15) NOT NULL,
+    `seat` INT(1),
+    PRIMARY KEY (id)
+);
 
--- --------------------------------------------------------
+INSERT INTO vehicle_type VALUES (1, 'Minivan', 6);
+INSERT INTO vehicle_type VALUES (2, 'Van', 7);
+INSERT INTO vehicle_type VALUES (3, 'Sedan', 4);
 
---
--- Estructura de tabla para la tabla `duenio`
---
+CREATE TABLE `route` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(1) NOT NULL,
+  `license_plate` varchar(7) NOT NULL,
+  `brand` varchar(50) NOT NULL,
+  `sail_point` varchar(100) NOT NULL,
+  `arrival_point` varchar(100) NOT NULL,
+  `date` date NOT NULL,
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (type) REFERENCES vehicle_type (id)
+);
 
-CREATE TABLE `duenio` (
-  `id_due` int(11) NOT NULL,
-  `nom_due` text NOT NULL,
-  `apePat_due` text NOT NULL,
-  `apeMat_due` text NOT NULL,
-  `tel_due` varchar(9) NOT NULL,
-  `email_due` varchar(100) NOT NULL,
-  `psw_due` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `route` (`type`,`license_plate`, `brand`, `sail_point`, `arrival_point`, `date`, `time`) VALUES
+(1, 'ABC-123', 'Hyundai', 'La Molina', 'Pershing', '0000-00-00', 21),
+(2, 'ABC-123', 'Hyundai', 'La Molina', 'Pershing', '0000-00-00', 21),
+(3, 'EMD-123', 'Toyota', 'Jockey Club', 'Puente Nuevo', '2019-10-30', 0),
+(1, 'DFE-345', 'Toyota', 'Aviacion con Javier Prado', 'Rivera Navarrete', '2019-10-30', 19),
+(2, 'DFE-123', 'Toyota', 'Javier Prado con Rivera Navarrete', 'Plaza San Miguel', '2019-10-31', 21),
+(3, 'EDF-567', 'Hyundai', 'Javier Prado con Pershing', 'Plaza San Miguel', '2019-10-31', 19),
+(1, 'EDF-567', 'Hyundai', 'Javier Prado con Pershing', 'Plaza San Miguel', '2019-10-31', 19),
+(2, 'ABC-678', 'ttttt', 'asdf', 'lkjh', '0000-00-00', 18),
+(3, 'EMD-123', 'Toyota', 'abfdsfds', 'fdsfdsfsdf', '2019-12-30', 14),
+(1, 'EMD-123', 'TOYOTA', 'Av. Javier Prado 123', 'Av Pershing 123', '2019-10-30', 21);
 
---
--- Volcado de datos para la tabla `duenio`
---
+select * from route;
 
-INSERT INTO `duenio` (`id_due`, `nom_due`, `apePat_due`, `apeMat_due`, `tel_due`, `email_due`, `psw_due`) VALUES
-(1, 'Fabian', 'Lopez', 'Sarango', '981562743', 'flopez@gmail.com', '12345'),
-(2, 'Sandra', 'Lopez', 'Sarango', '987654321', 'slopez@gmail.com', '123456'),
-(3, 'Miguel', 'Rodas', 'Balbin', '965434897', 'mrodas@gmail.com', '1234567'),
-(4, 'Luis', 'Ramirez', 'Sotelo', '987654321', 'adfdsf@gmil.com', '123456'),
-(5, 'Fabian', 'SADSA', 'DSA', '987654321', 'abc', '123');
+CREATE TABLE `route_stops` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `route_id` INT(11) NOT NULL,
+    `description` VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (route_id) REFERENCES route(id)
+);
 
--- --------------------------------------------------------
+INSERT INTO `route_stops` (route_id, description) VALUES
+                                                         (1, 'Javier Prado'),
+                                                        (1, 'Salaverry'),
+                                                        (2, 'Javier Prado'),
+                                                        (3, 'Santa Anita'),
+                                                        (4, 'Guardia Civil con Javier Prad'),
+                                                        (5, 'Salaverry con Pershing'),
+                                                        (6, 'Sucre con La Marina'),
+                                                        (7, 'Sucre con La Marina'),
+                                                        (8, 'zxcv'),
+                                                        (9, 'fdsfdsfdsf'),
+                                                        (10, '123');
 
---
--- Estructura de tabla para la tabla `ruta`
---
-
-CREATE TABLE `ruta` (
-  `id_rut` int(11) NOT NULL,
-  `num_placa` varchar(7) NOT NULL,
-  `marca` varchar(50) NOT NULL,
-  `par_ini` varchar(100) NOT NULL,
-  `par_fin` varchar(100) NOT NULL,
-  `par1_` varchar(100) NOT NULL,
-  `fecha` date NOT NULL,
-  `hora` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `ruta`
---
-
-INSERT INTO `ruta` (`id_rut`, `num_placa`, `marca`, `par_ini`, `par_fin`, `par1_`, `fecha`, `hora`) VALUES
-(1, 'ABC-123', 'Hyundai', 'La Molina', 'Pershing', 'Javier Prado', '0000-00-00', 21),
-(2, 'ABC-123', 'Hyundai', 'La Molina', 'Pershing', 'Javier Prado', '0000-00-00', 21),
-(3, 'EMD-123', 'Toyota', 'Jockey Club', 'Puente Nuevo', 'Santa Anita', '2019-10-30', 0),
-(4, 'DFE-345', 'Toyota', 'Aviacion con Javier Prado', 'Rivera Navarrete', 'Guardia Civil con Javier Prado', '2019-10-30', 19),
-(5, 'DFE-123', 'Toyota', 'Javier Prado con Rivera Navarrete', 'Plaza San Miguel', 'Salaverry con Pershing', '2019-10-31', 21),
-(6, 'EDF-567', 'Hyundai', 'Javier Prado con Pershing', 'Plaza San Miguel', 'Sucre con La Marina', '2019-10-31', 19),
-(7, 'EDF-567', 'Hyundai', 'Javier Prado con Pershing', 'Plaza San Miguel', 'Sucre con La Marina', '2019-10-31', 19),
-(8, 'ABC-678', 'ttttt', 'asdf', 'lkjh', 'zxcv', '0000-00-00', 18),
-(9, 'EMD-123', 'Toyota', 'abfdsfds', 'fdsfdsfsdf', 'fdsfdsfdsf', '2019-12-30', 14),
-(10, 'EMD-123', 'TOYOTA', 'Av. Javier Prado 123', 'Av Pershing 123', '123', '2019-10-30', 21);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE `usuario` (
-  `id_user` int(11) NOT NULL,
-  `nom_user` text NOT NULL,
-  `apePat_user` text NOT NULL,
-  `apeMat_user` text NOT NULL,
-  `email_user` varchar(100) NOT NULL,
-  `psw_user` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`id_user`, `nom_user`, `apePat_user`, `apeMat_user`, `email_user`, `psw_user`) VALUES
-(1, 'Carlos', 'Romero', 'Tapia', 'ctapia@gmail.com', 'abc123'),
-(2, 'Erica', 'Tapia', 'Nuñez', 'etapia@gmail.com', '1234'),
-(3, 'Luis', 'Lopez', 'Zeballos', 'llopez@gmail.com', 'abc1234');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `administrador`
---
-ALTER TABLE `administrador`
-  ADD PRIMARY KEY (`adm_id`);
-
---
--- Indices de la tabla `duenio`
---
-ALTER TABLE `duenio`
-  ADD PRIMARY KEY (`id_due`);
-
---
--- Indices de la tabla `ruta`
---
-ALTER TABLE `ruta`
-  ADD PRIMARY KEY (`id_rut`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id_user`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `administrador`
---
-ALTER TABLE `administrador`
-  MODIFY `adm_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `duenio`
---
-ALTER TABLE `duenio`
-  MODIFY `id_due` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `ruta`
---
-ALTER TABLE `ruta`
-  MODIFY `id_rut` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+select * from route_stops;

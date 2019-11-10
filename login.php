@@ -1,15 +1,16 @@
 <?php
 require "conn.php";
-$user_name = $_POST['user_name'];
-$user_pass = $_POST['password'];
-$mysql_query = "select * from duenio where email_due = '$user_name' and psw_due = '$user_pass';";
+$email = $_POST['email'];
+$password = $_POST['password'];
+$mysql_query = "select * from user where email='$email' and password='$password';";
 $result = mysqli_query($conn, $mysql_query);
+header('Content-type: application/json');
 if(mysqli_num_rows($result) > 0)
 {
-    echo "Bienvenido";
+    echo json_encode(["message" => "success"]);
 }
-else 
+else
 {
-    echo "login not success";    
+    echo json_encode(["message" => "fail"]);
 }
 ?>
