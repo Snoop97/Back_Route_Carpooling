@@ -1,5 +1,5 @@
 <?php
-require "conn.php";
+require "../util/conn.php";
 $email = $_POST['email'];
 $password = $_POST['password'];
 $mysql_query = "select * from user where email='$email' and password='$password';";
